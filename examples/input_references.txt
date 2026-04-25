@@ -1,0 +1,2 @@
+1. Smith J, Lee K. Artificial intelligence in lyophilization process monitoring. J Pharm Sci. 2021;110(4):1234-1245. doi:10.0000/example-doi
+2. Wang X, Chen Y. Freeze drying of biologics: challenges and opportunities. Pharmaceutics. 2022;14(5):999. doi:10.3390/pharmaceutics14050999
