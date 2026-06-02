@@ -1,3 +1,14 @@
+<p align="center">
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/Language-English-blue" alt="English">
+  </a>
+  <a href="README.zh-CN.md">
+    <img src="https://img.shields.io/badge/语言-中文-green" alt="中文">
+  </a>
+  <img src="https://img.shields.io/badge/Type-AI%20Skill-purple" alt="AI Skill">
+  <img src="https://img.shields.io/badge/Check-DOI%20%2B%20Metadata-orange" alt="DOI and Metadata">
+  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="MIT License">
+</p>
 # Reference Checker Skill
 
 **An exhaustive pre-submission reference verification skill for scholarly manuscripts.**
