@@ -1,5 +1,4 @@
-<p align="center">
-  <img src="assets/cover.png" alt="Reference Checker Skill 封面" width="800">
+
 </p>
 
 <p align="center">
