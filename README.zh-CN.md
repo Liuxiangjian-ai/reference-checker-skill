@@ -1,5 +1,13 @@
 <p align="center">
-  <img src="assets/cover.png" alt="Reference Checker Skill 封面" width="800">
+  <a href="README.zh-CN.md">
+    <img src="https://img.shields.io/badge/语言-中文-green" alt="中文">
+  </a>
+  <a href="README.md">
+    <img src="https://img.shields.io/badge/Language-English-blue" alt="English">
+  </a>
+  <img src="https://img.shields.io/badge/类型-AI%20Skill-purple" alt="AI Skill">
+  <img src="https://img.shields.io/badge/核查-DOI%20%2B%20元数据-orange" alt="DOI 和元数据">
+  <img src="https://img.shields.io/badge/许可证-MIT-yellow" alt="MIT License">
 </p>
 
 # Reference Checker Skill｜参考文献核查 Skill
