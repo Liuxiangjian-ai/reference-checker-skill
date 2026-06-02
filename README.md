@@ -1,110 +1,153 @@
 <p align="center">
-  <a href="README.md">
+  <img src="assets/cover.png" alt="Reference Checker Skill 封面" width="800">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/语言-中文-green" alt="中文">
+  <a href="README.en.md">
     <img src="https://img.shields.io/badge/Language-English-blue" alt="English">
   </a>
-  <a href="README.zh-CN.md">
-    <img src="https://img.shields.io/badge/语言-中文-green" alt="中文">
-  </a>
-  <img src="https://img.shields.io/badge/Type-AI%20Skill-purple" alt="AI Skill">
-  <img src="https://img.shields.io/badge/Check-DOI%20%2B%20Metadata-orange" alt="DOI and Metadata">
-  <img src="https://img.shields.io/badge/License-MIT-yellow" alt="MIT License">
+  <img src="https://img.shields.io/badge/类型-AI%20Skill-purple" alt="AI Skill">
+  <img src="https://img.shields.io/badge/核查-DOI%20%2B%20元数据-orange" alt="DOI 和元数据">
+  <img src="https://img.shields.io/badge/许可证-MIT-yellow" alt="MIT License">
 </p>
-# Reference Checker Skill
 
-**An exhaustive pre-submission reference verification skill for scholarly manuscripts.**
+# Reference Checker Skill｜参考文献核查 Skill
 
-Reference Checker Skill helps researchers, students, editors, and academic writers audit manuscript references before journal submission.  
-It is designed to reduce fake citations, DOI mismatches, incorrect metadata, duplicated references, and AI-generated reference errors.
+🌐 Language: 中文 | [English](README.md)
 
-Unlike lightweight citation checkers that only sample a few references, this skill is designed for **item-by-item exhaustive verification**.
+**不要让一条假文献毁掉整篇论文的可信度。**
 
----
+Reference Checker Skill 是一个用于**学术论文投稿前参考文献逐条核查**的 AI Skill，适合研究生、科研作者、编辑、审稿助理和学术写作者使用。
 
-## Why this skill?
-
-Reference errors are easy to miss but costly during submission.
-
-Common problems include:
-
-- fabricated or non-existent references
-- DOI pointing to the wrong article
-- incorrect article titles
-- wrong journal names
-- mismatched year, volume, issue, or page numbers
-- duplicated references
-- preprints cited when a peer-reviewed version already exists
-- inconsistent reference formatting
-- AI-generated references that look plausible but are not real
-
-This skill forces the AI to audit **every reference**, not just the suspicious ones.
+它的目标不是“帮你简单看一下参考文献”，而是让 AI 按照严格流程，对参考文献列表进行**逐条、结构化、可追踪的核验**，尽量发现投稿前最容易被忽略、但最可能影响论文可信度的问题。
 
 ---
 
-## Key Features
+## 为什么需要这个 Skill？
 
-- **Exhaustive reference checking**  
-  Every reference must be reviewed individually unless the user explicitly requests sampling.
+在 AI 辅助写作越来越普遍的今天，参考文献错误变得更隐蔽，也更危险。
 
-- **Structured metadata verification**  
-  Checks title, authors, journal/source, year, DOI, PMID, volume, issue, and pages.
+很多错误看起来“很像真的”：
 
-- **Batch-by-batch workflow for long reference lists**  
-  If the reference list is too long, the skill reports which references were checked in the current round and asks whether to continue.
+* DOI 存在，但指向的是另一篇文章
+* 题名看起来合理，但数据库里查不到
+* 作者、期刊、年份、卷期页码彼此错配
+* 预印本已经有正式发表版本，但文中仍引用旧版本
+* 同一篇文献被重复引用
+* AI 生成了格式完整、内容逼真、但实际不存在的参考文献
 
-- **Clear severity labels**  
-  Problems are classified as:
-  - `Critical`
-  - `Major`
-  - `Minor`
-  - `Manual check`
+这些问题如果出现在投稿稿件中，轻则影响编辑和审稿人的第一印象，重则直接损害整篇论文的可信度。
 
-- **Final problem summary**  
-  When the full audit is complete, the skill summarizes all problematic references in one place.
-
-- **Human-review friendly tables**  
-  Each output table includes the submitted title, authors, journal/source, year, DOI/PMID, verification route, match quality, status, confidence, and suggested fix.
-
-- **No Python dependency**  
-  This is a pure prompt-based skill. No scripts or external setup are required.
+**Reference Checker Skill 的核心价值，就是在投稿前帮你把这些问题尽可能提前暴露出来。**
 
 ---
 
-## What it checks
+## 这个 Skill 能做什么？
 
-For each reference, the skill attempts to verify:
+Reference Checker Skill 会要求 AI 对参考文献进行**逐条核查**，而不是只挑几条看起来可疑的文献抽样检查。
 
-| Field | Checked |
-|---|---|
-| Reference existence | Yes |
-| Article title | Yes |
-| Authors | Yes |
-| Journal / source | Yes |
-| Publication year | Yes |
-| Volume / issue | Yes |
-| Page range / article number | Yes |
-| DOI | Yes |
-| PMID / PMCID | When available |
-| Duplicate references | Yes |
-| Preprint vs published version conflict | Yes |
-| Retraction or source risk | When detectable |
+它会尽量核验每一条参考文献的关键信息，包括：
 
----
-
-## Recommended Use Cases
-
-This skill is especially useful for:
-
-- journal manuscript submission
-- review articles with long reference lists
-- biomedical and life science manuscripts
-- AI-assisted academic writing
-- reference lists reformatted by citation managers
-- checking references generated or modified by LLMs
-- pre-submission editorial quality control
+| 检查项目         | 是否检查   |
+| ------------ | ------ |
+| 文献是否真实存在     | 是      |
+| 文章题名         | 是      |
+| 作者信息         | 是      |
+| 期刊 / 来源      | 是      |
+| 发表年份         | 是      |
+| 卷、期、页码或文章编号  | 是      |
+| DOI          | 是      |
+| PMID / PMCID | 如有则检查  |
+| 重复引用         | 是      |
+| 预印本与正式发表版本冲突 | 是      |
+| 撤稿或来源风险      | 可检测时检查 |
 
 ---
 
-## Example Prompt
+## 核心特点
+
+### 1. 逐条核查，而不是抽样检查
+
+很多参考文献检查工具只适合快速浏览，容易漏掉隐藏错误。
+
+这个 Skill 默认要求 AI **逐条检查每一条参考文献**。除非用户明确要求抽样，否则不应跳过任何一条。
+
+---
+
+### 2. 不只查 DOI，还查元数据是否匹配
+
+一个 DOI 能打开，并不代表这条参考文献就是正确的。
+
+这个 Skill 会要求 AI 同时核对：
+
+* 题名是否一致
+* 作者是否匹配
+* 期刊名称是否正确
+* 年份、卷期、页码是否对应
+* DOI 是否真的指向该文章
+* PMID / PMCID 是否与文献信息一致
+
+它关注的不是“有没有 DOI”，而是**整条参考文献是否真实、准确、对应一致**。
+
+---
+
+### 3. 对问题进行严重程度分级
+
+所有发现的问题都会被标记为不同严重程度，方便你优先处理。
+
+| 严重程度           | 含义                                      |
+| -------------- | --------------------------------------- |
+| `Critical`     | 高风险问题，例如疑似假文献、不存在的文章、错误 DOI、DOI 指向另一篇文章 |
+| `Major`        | 真实文献，但关键元数据错误，例如题名、期刊、年份、卷期页码明显不匹配      |
+| `Minor`        | 格式、大小写、字段不完整或引用风格不一致等小问题                |
+| `Manual check` | 证据不足，无法可靠判断，需要人工进一步确认                   |
+
+---
+
+### 4. 支持长参考文献列表分批检查
+
+如果参考文献数量很多，AI 一次无法可靠检查完，Skill 会要求 AI 分批处理，并明确说明：
+
+* 本轮检查了哪些编号
+* 哪些参考文献还没有检查
+* 是否需要继续下一批
+
+这样可以避免 AI 在长列表中漏查、跳查或假装已经全部检查完成。
+
+---
+
+### 5. 输出结果适合人工复核
+
+每一轮检查都会输出结构化表格，方便作者、导师、编辑或合作者快速定位问题。
+
+示例输出表格包括：
+
+| Ref | Submitted Title | Submitted Authors | Submitted Source / Journal | Year | DOI / PMID | Verification Route | Match Quality | Status | Confidence | Main Issue / Suggested Fix |
+| --- | --------------- | ----------------- | -------------------------- | ---- | ---------- | ------------------ | ------------- | ------ | ---------- | -------------------------- |
+
+核查完成后，Skill 还会要求 AI 汇总所有问题文献，方便用户一次性修改。
+
+---
+
+## 适合哪些场景？
+
+这个 Skill 特别适合：
+
+* 期刊论文投稿前检查
+* 学位论文参考文献核查
+* 综述论文长参考文献列表检查
+* 生物医学和生命科学论文投稿
+* 使用 AI 辅助写作后检查引用真实性
+* 文献管理软件批量导出后的质量控制
+* 编辑部或课题组内部的投稿前质控流程
+* 检查疑似 AI 生成或 AI 修改过的参考文献
+
+---
+
+## 示例提示词
+
+你可以这样使用：
 
 ```text
 Please use the Reference Checker Skill to audit the following reference list.
@@ -117,49 +160,54 @@ Requirements:
 5. If the list is too long, check it in batches and ask me whether to continue.
 ```
 
+中文用户也可以直接这样说：
+
+```text
+请使用 Reference Checker Skill 帮我逐条核查下面的参考文献列表。
+
+要求：
+1. 必须逐条检查，不要抽样。
+2. 核查题名、作者、期刊、年份、卷、期、页码、DOI，如果有 PMID 也一并检查。
+3. 将问题分为 Critical、Major、Minor 和 Manual check。
+4. 如果参考文献太多，请分批检查，并明确告诉我本轮检查了哪些编号，还有哪些没有检查。
+5. 全部检查完成后，请汇总所有有问题的参考文献。
+```
+
 ---
 
-## Output Format
+## 推荐输出格式
 
-Each audit round includes a table like this:
+每一轮核查应包含如下表格：
 
 | Ref | Submitted Title | Submitted Authors | Submitted Source / Journal | Year | DOI / PMID | Verification Route | Match Quality | Status | Confidence | Main Issue / Suggested Fix |
-|---|---|---|---|---|---|---|---|---|---|---|
+| --- | --------------- | ----------------- | -------------------------- | ---- | ---------- | ------------------ | ------------- | ------ | ---------- | -------------------------- |
 
-For long reference lists, the skill ends each round with a continuation message, for example:
+如果参考文献较多，本轮结束时应说明：
 
 ```text
 This round checked references 1–20. References 21–58 remain unchecked.
 Would you like me to continue with the next round, references 21–40?
 ```
 
-When all references have been checked, the skill provides a final summary:
+全部核查完成后，应输出：
 
 ```text
 Reference audit complete.
 ```
 
-Then it lists all references with Critical, Major, Minor, and Manual check issues.
+并汇总所有存在 `Critical`、`Major`、`Minor` 和 `Manual check` 问题的参考文献。
 
 ---
 
-## Severity Definitions
-
-| Severity | Meaning |
-|---|---|
-| Critical | Likely fake reference, non-existent article, wrong DOI, or DOI points to a different article |
-| Major | Real article, but important metadata is wrong |
-| Minor | Formatting problem, incomplete field, capitalization issue, or style inconsistency |
-| Manual check | Not enough evidence to verify confidently |
-
----
-
-## Repository Structure
+## 推荐仓库结构
 
 ```text
 reference-checker-skill/
 ├── SKILL.md
 ├── README.md
+├── README.zh-CN.md
+├── assets/
+│   └── cover.png
 ├── templates/
 │   ├── report_template.md
 │   └── correction_table_template.md
@@ -170,31 +218,37 @@ reference-checker-skill/
 
 ---
 
-## Installation
+## 安装与使用
 
-Download or clone this repository, then place the folder in your AI skill directory if your environment supports skill-based workflows.
+下载或克隆本仓库后，将文件夹放入支持 Skill 工作流的 AI 环境中。
 
-The core file is:
+核心文件是：
 
 ```text
 SKILL.md
 ```
 
-You can also copy the contents of `SKILL.md` into a custom instruction, project instruction, or agent workflow.
+如果你的环境不支持 Skill 文件夹，也可以直接将 `SKILL.md` 中的内容复制到：
+
+* 自定义指令
+* 项目指令
+* Agent 工作流
+* Manuscript checking prompt
+* 投稿前质控流程
 
 ---
 
-## Important Note
+## 重要说明
 
-This skill is designed to support reference verification, not to replace final human review.
+Reference Checker Skill 用于辅助参考文献核查，但不能完全替代人工审阅。
 
-For journal submission, users should manually confirm all references marked as:
+对于被标记为以下类型的参考文献，建议用户务必人工复核：
 
-- `Critical`
-- `Major`
-- `Manual check`
+* `Critical`
+* `Major`
+* `Manual check`
 
-The skill is intentionally strict. If a reference cannot be confidently verified, it should be flagged rather than silently accepted.
+这个 Skill 的设计原则是：**宁可严格标记可疑问题，也不要把无法确认的参考文献默认为正确。**
 
 ---
 
