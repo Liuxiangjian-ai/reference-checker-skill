@@ -1,6 +1,6 @@
 ---
 name: reference-checker
-version: 1.4
+version: 1.4.0
 description: Exhaustively verify English and Chinese manuscript references before journal submission. Use when checking whether references are real, accurate, complete, traceable, and formatted consistently. Uses DOI/PubMed/Crossref/publisher checks for English/international references, and uses Chinese-title-first CNKI/Wanfang/VIP/official-source checks for Chinese references. DOI is optional for Chinese references and must not be required unless the target citation style explicitly requires it.
 ---
 
