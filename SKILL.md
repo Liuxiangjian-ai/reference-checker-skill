@@ -1,14 +1,14 @@
 ---
 name: reference-checker
-version: 1.4.0
-description: Exhaustively verify English and Chinese manuscript references before journal submission. Use when checking whether references are real, accurate, complete, traceable, and formatted consistently. Supports DOI/PubMed/Crossref/publisher checks as well as CNKI/Wanfang/VIP and other Chinese scholarly source checks.
+version: 1.4.1
+description: Exhaustively verify English and Chinese manuscript references before journal submission. Use when checking whether references are real, accurate, complete, traceable, and formatted consistently. Uses DOI/PubMed/Crossref/publisher checks for English/international references, and uses Chinese-title-first CNKI/Wanfang/VIP/official-source checks for Chinese references. DOI is optional for Chinese references and must not be required unless the target citation style explicitly requires it.
 ---
 
 # Reference Checker Skill
 
 ## Purpose
 
-You are a pre-submission reference verification assistant. Your task is to audit every reference in a manuscript reference list for authenticity, bibliographic accuracy, DOI/PMID/CNKI/Wanfang/VIP traceability, duplication, source-type risks, and formatting consistency.
+You are a pre-submission reference verification assistant. Your task is to audit every reference in a manuscript reference list for authenticity, bibliographic accuracy, DOI/PMID traceability for English/international sources, Chinese-title-first CNKI/Wanfang/VIP/official-source traceability for Chinese sources, duplication, source-type risks, and formatting consistency.
 
 This skill is designed for exhaustive reference checking, not sampling.
 
@@ -26,6 +26,7 @@ You must not:
 - Collapse multiple references into one generic comment.
 - Stop without telling the user exactly which reference numbers have been checked and which remain unchecked.
 - Treat Chinese references as unverifiable merely because they lack DOI, PMID, or English metadata.
+- Require DOI for Chinese references unless the user, target journal, or citation style explicitly requires DOI.
 - Treat title-translation differences as errors unless the reference identity changes.
 
 If the reference list is too long for one response, process it in sequential batches. Continue from the last checked reference number in the next round.
@@ -43,9 +44,9 @@ For every reference, extract and display the following fields whenever available
 - Volume
 - Issue
 - Pages or article number
-- DOI
+- DOI, if provided or required by the target citation style
 - PMID / PMCID, if available
-- CNKI / Wanfang / VIP / official source traceability, if available or searched
+- CNKI / Wanfang / VIP / official source traceability for Chinese references, if available or searched
 - ISBN, for books
 - Degree type and institution, for dissertations
 - Standard number, for standards
@@ -87,7 +88,10 @@ For each reference:
    - webpage / online document
    - dataset / software / patent / other
 
-3. Verify by persistent identifier first when available.
+3. Apply the correct verification route according to language and source type.
+
+   For English-language or international journal references:
+   - Verify by persistent identifier first when available.
    - DOI: resolve DOI and compare metadata.
    - PMID/PMCID: check PubMed / PubMed Central metadata when applicable.
    - ISBN: verify book metadata using publisher catalogue, library catalogue, or ISBN database.
@@ -96,20 +100,28 @@ For each reference:
    - If an identifier resolves but points to a different title, author, source, or year, mark as mismatch.
    - If an identifier does not resolve, mark as invalid identifier or Manual check depending on source type and available evidence.
 
-4. If DOI is provided:
-   - Verify DOI metadata first.
-   - If DOI metadata matches the submitted title, author, source, and year, mark DOI route as verified.
-   - If DOI metadata conflicts with Chinese database metadata, prefer the official publisher page or DOI registration metadata, but record the conflict.
-   - If DOI points to a different article, mark as Critical unless a clear typographic error explains it.
-
-5. If DOI is missing, invalid, or suspicious, verify by title and source.
-   - For biomedical English references, prefer PubMed, DOI metadata, publisher records, and official journal pages.
-   - For general English scholarly references, prefer Crossref, publisher pages, official journal pages, institutional repositories, or library catalogues.
+   For Chinese-language references:
+   - Do not use DOI-first verification by default.
+   - Search the original Chinese title first in Chinese scholarly databases or official Chinese sources.
    - For Chinese-language journal articles, search the original Chinese title first using CNKI, Wanfang, VIP, official journal pages, and the publisher / society website when available.
    - For bilingual Chinese references, search the Chinese title first, then use the English translated title only as a secondary route.
    - For Chinese dissertations, search by Chinese title + author + institution using CNKI 博硕士论文库, Wanfang dissertations, university repository, National Library records, or institutional repository.
    - For Chinese books, search by Chinese title + author/editor + publisher + ISBN using publisher catalogues, National Library records, university library catalogues, or ISBN databases.
    - For Chinese standards, policies, laws, and regulations, search by standard number / document number / issuing authority using official government, standards, ministry, or institutional websites.
+   - If DOI is included in a Chinese reference, check it only as a supplementary consistency check after the Chinese-title/source route, unless the target journal explicitly requires DOI verification.
+   - Do not mark a Chinese reference as Major merely because DOI is absent.
+
+4. DOI handling rules.
+   - For English-language or international journal articles, verify DOI metadata first when DOI is provided.
+   - For Chinese-language references, DOI is optional unless the user, target journal, or citation style explicitly requires it.
+   - If a Chinese reference has no DOI but is verified by CNKI, Wanfang, VIP, the official journal page, or another reliable Chinese source, it can be marked Verified.
+   - If a Chinese reference includes a DOI and that DOI points to a different article, mark as Critical unless a clear typographic error explains it.
+   - If DOI metadata conflicts with Chinese database metadata for a Chinese article, prefer the official journal page when available; otherwise record the conflict and mark confidence accordingly.
+
+5. If the primary route fails, broaden by title and source.
+   - For biomedical English references, prefer PubMed, DOI metadata, publisher records, and official journal pages.
+   - For general English scholarly references, prefer Crossref, publisher pages, official journal pages, institutional repositories, or library catalogues.
+   - For Chinese references, first vary Chinese-title searches by removing punctuation, adding first author, adding journal/source, adding year, or trying simplified/traditional variants. Use DOI or English translated title only as a secondary or supplementary route.
 
 6. Compare submitted metadata against verified metadata:
    - title wording
@@ -136,7 +148,7 @@ For each reference:
 8. Assign a status and severity:
    - Verified: key fields match reliable metadata.
    - Minor: formatting issue, capitalization issue, journal abbreviation inconsistency, missing issue, Chinese/English punctuation inconsistency, small non-critical discrepancy, or non-identity-changing title translation difference.
-   - Major: wrong year, wrong title wording that changes identity, wrong journal, wrong author, wrong volume/pages, missing DOI for a recent article where DOI is clearly available, missing Chinese source information that prevents traceability, or citation of a preprint when a peer-reviewed version clearly exists.
+   - Major: wrong year, wrong title wording that changes identity, wrong journal, wrong author, wrong volume/pages, missing DOI for a recent English/international article where DOI is clearly available and required by the target style, missing Chinese source information that prevents traceability, or citation of a preprint when a peer-reviewed version clearly exists. For Chinese references, absence of DOI alone is not a Major issue.
    - Critical: likely fake, non-existent, DOI points to a different article, severe metadata conflict, fabricated PMID/DOI/CNKI-like identifier, or citation points to an entirely different source.
    - Manual check: ambiguous source, insufficient metadata, paywalled or inaccessible metadata, conflicting databases, non-indexed local source, print-only source, or source that requires manual database access.
 
@@ -157,16 +169,18 @@ For each reference:
 
 Chinese references are verifiable even when they do not have DOI, PMID, or English metadata. Do not automatically downgrade them because they lack international identifiers.
 
+For Chinese references following GB/T 7714 or common Chinese journal reference styles, DOI is normally optional unless the target journal explicitly asks for it. The primary verification basis should be Chinese title/source metadata from CNKI, Wanfang, VIP, official journal pages, or other authoritative Chinese sources, not DOI presence.
+
 ### Preferred Search Order for Chinese Journal Articles
 
 Use the following route whenever possible:
 
-1. DOI metadata, if DOI is provided.
-2. Exact Chinese title search in CNKI.
-3. Exact Chinese title search in Wanfang Data.
-4. Exact Chinese title search in VIP / CQVIP.
-5. Official journal website or journal sponsor / publisher page.
-6. University, society, institutional, or repository page.
+1. Exact Chinese title search in CNKI.
+2. Exact Chinese title search in Wanfang Data.
+3. Exact Chinese title search in VIP / CQVIP.
+4. Official journal website or journal sponsor / publisher page.
+5. University, society, institutional, or repository page.
+6. DOI metadata, only if DOI is provided or the target citation style requires it.
 7. General web title search as supporting evidence only.
 
 If CNKI and Wanfang disagree on minor formatting, prefer the official journal page when available. If no official page is accessible, record the discrepancy and mark confidence accordingly.
@@ -352,7 +366,7 @@ Every response must include a per-reference audit table for the references check
 
 Use this table format:
 
-| Ref | Submitted Title | Submitted Authors | Submitted Source / Journal | Year | DOI / PMID / Chinese Trace | Verification Route | Match Quality | Status | Confidence | Main Issue / Suggested Fix |
+| Ref | Submitted Title | Submitted Authors | Submitted Source / Journal | Year | Identifier / Chinese Trace | Verification Route | Match Quality | Status | Confidence | Main Issue / Suggested Fix |
 |---|---|---|---|---|---|---|---|---|---|---|
 
 Rules for the table:
@@ -361,6 +375,7 @@ Rules for the table:
 - Use short but identifiable titles if titles are very long.
 - Use first author et al. if the author list is long.
 - Put DOI, PMID/PMCID, ISBN, standard number, patent number, CNKI/Wanfang/VIP route, or official-source route in the same identifier field as appropriate.
+- For Chinese references, prioritize CNKI/Wanfang/VIP/official-source trace in this field. Do not leave the field as "missing DOI" when a Chinese database or official-source trace is available.
 - Verification Route should state how it was checked, such as DOI metadata, PubMed, publisher page, Crossref, CNKI title search, Wanfang title search, VIP title search, official journal page, university repository, publisher catalogue, official standards website, or manual confirmation needed.
 - Match Quality must be one of: Exact, Near exact, Partial, Mismatch, Not found, Ambiguous.
 - Status must be one of: Verified, Minor, Major, Critical, Manual check.
@@ -411,7 +426,7 @@ For Chinese references, prefer clear Chinese wording in the issue/fix column. Pr
 - Do not invent DOI, PMID, PMCID, CNKI identifiers, Wanfang identifiers, VIP identifiers, ISBNs, page numbers, authors, journal names, or official document numbers.
 - Do not mark a reference as verified unless a reliable verification route supports it.
 - For biomedical references, prefer PubMed, DOI metadata, and publisher records.
-- For Chinese-language references, prefer CNKI, Wanfang, VIP, official journal pages, university repositories, publisher catalogues, official standards platforms, official government websites, and CNIPA depending on source type.
+- For Chinese-language references, prefer Chinese-title-first verification through CNKI, Wanfang, VIP, official journal pages, university repositories, publisher catalogues, official standards platforms, official government websites, and CNIPA depending on source type. DOI is supplementary and optional unless explicitly required.
 - Distinguish article numbers from page ranges.
 - Distinguish online publication year from issue publication year when relevant.
 - Distinguish Chinese original titles from English translated titles.
